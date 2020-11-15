@@ -1,0 +1,44 @@
+name: CI
+
+# Enable Buildkit and let compose use it to speed up image building
+env:
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install Tox and any other packages
+        run: pip install tox
+
+      - name: Build the stack
+        run: docker-compose build
+
+      - name: Run the stack
+        run: docker-compose up -d
+
+      - name: Make DB upgrade
+        run: docker-compose exec -T web notifier db upgrade
+
+      - name: Init notifier
+        run: docker-compose exec -T web notifier init
+
+      - name: Stop celery
+        run: docker-compose stop celery
+
+      - name: Start RabbitMQ and Redis
+        run: docker-compose start rabbitmq redis
+
+      - name: Run Tox Tests
+        run: docker-compose run -v $PWD/tests:/code/tests:ro web tox -e test
