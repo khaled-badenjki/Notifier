@@ -1,5 +1,6 @@
 from notifier.extensions import db
 
+
 class Customer(db.Model):
     """Customer model for notifications"""
 
@@ -11,3 +12,7 @@ class Customer(db.Model):
 
     def __repr__(self):
         return "<Customer %s>" % self.name
+
+    @staticmethod
+    def customer_exists(email):
+        return Customer.query.filter(Customer.email == email).first() is not None

@@ -152,7 +152,8 @@ class CustomerList(Resource):
     def post(self):
         schema = CustomerSchema()
         customer = schema.load(request.json)
-
+        if Customer.customer_exists(customer.email):
+            return {'error': 'User with this email already exists'}, 422
         db.session.add(customer)
         db.session.commit()
 
