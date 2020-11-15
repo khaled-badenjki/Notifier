@@ -11,5 +11,6 @@ passlib
 apispec[yaml]
 apispec-webframeworks
 tox
-celery[redis]
+celery[redis]==4.4.7
 gunicorn
+flower==0.9.5
