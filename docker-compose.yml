@@ -1,0 +1,35 @@
+# WARNING: this file is not suitable for production, please use with caution
+version: '3'
+
+services:
+  web:
+    image: notifier
+    build: .
+    command: gunicorn -b 0.0.0.0:5000 notifier.wsgi:app
+    env_file:
+      - ./.flaskenv
+    environment:
+      - DATABASE_URI=sqlite:////db/notifier.db
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq
+      - CELERY_RESULT_BACKEND_URL=redis://redis
+    volumes:
+      - ./notifier:/code/notifier
+      - ./db/:/db/
+    ports:
+      - "5000:5000"
+  rabbitmq:
+    image: rabbitmq
+  redis:
+    image: redis
+  celery:
+    image: notifier
+    command: "celery worker -A notifier.celery_app:app"
+    env_file:
+      - ./.flaskenv
+    volumes:
+      - .:/code
+    depends_on:
+      - rabbitmq
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq
+      - CELERY_RESULT_BACKEND_URL=redis://redis
