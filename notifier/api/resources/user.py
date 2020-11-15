@@ -13,7 +13,7 @@ class UserResource(Resource):
     ---
     get:
       tags:
-        - api
+        - user api (authentication model)
       parameters:
         - in: path
           name: user_id
@@ -31,7 +31,7 @@ class UserResource(Resource):
           description: user does not exists
     put:
       tags:
-        - api
+        - user api (authentication model)
       parameters:
         - in: path
           name: user_id
@@ -57,7 +57,7 @@ class UserResource(Resource):
           description: user does not exists
     delete:
       tags:
-        - api
+        - user api (authentication model)
       parameters:
         - in: path
           name: user_id
@@ -107,7 +107,7 @@ class UserList(Resource):
     ---
     get:
       tags:
-        - api
+        - user api (authentication model)
       responses:
         200:
           content:
@@ -123,7 +123,7 @@ class UserList(Resource):
                           $ref: '#/components/schemas/UserSchema'
     post:
       tags:
-        - api
+        - user api (authentication model)
       requestBody:
         content:
           application/json:
