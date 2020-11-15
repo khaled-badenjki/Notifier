@@ -26,7 +26,7 @@ class CustomerResource(Resource):
               schema:
                 type: object
                 properties:
-                  user: CustomerSchema
+                  customer: CustomerSchema
         404:
           description: customer does not exists
     put:
@@ -99,3 +99,61 @@ class CustomerResource(Resource):
         db.session.commit()
 
         return {"msg": "customer deleted"}
+
+
+class CustomerList(Resource):
+    """Creation and get_all
+
+    ---
+    get:
+      tags:
+        - customer api
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResult'
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CustomerSchema'
+    post:
+      tags:
+        - customer api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              CustomerSchema
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: customer created
+                  customer: CustomerSchema
+    """
+
+    method_decorators = [jwt_required]
+
+    def get(self):
+        schema = CustomerSchema(many=True)
+        query = Customer.query
+        return paginate(query, schema)
+
+    def post(self):
+        schema = CustomerSchema()
+        customer = schema.load(request.json)
+
+        db.session.add(customer)
+        db.session.commit()
+
+        return {"msg": "customer created", "customer": schema.dump(customer)}, 201

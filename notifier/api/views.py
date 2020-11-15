@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, jsonify
 from flask_restful import Api
 from marshmallow import ValidationError
 from notifier.extensions import apispec
-from notifier.api.resources import UserResource, UserList, CustomerResource
+from notifier.api.resources import UserResource, UserList, CustomerResource, CustomerList
 from notifier.api.schemas import UserSchema, CustomerSchema
 
 
@@ -14,6 +14,7 @@ api.add_resource(UserResource, "/users/<int:user_id>", endpoint="user_by_id")
 api.add_resource(UserList, "/users", endpoint="users")
 
 api.add_resource(CustomerResource, "/customers/<int:customer_id>", endpoint="customer_by_id")
+api.add_resource(CustomerList, "/customers", endpoint="customers")
 
 
 @blueprint.before_app_first_request
@@ -22,9 +23,10 @@ def register_views():
     apispec.spec.components.schema("CustomerSchema", schema=CustomerSchema)
 
     apispec.spec.path(view=UserResource, app=current_app)
-    apispec.spec.path(view=UserList, app=current_app)
-
     apispec.spec.path(view=CustomerResource, app=current_app)
+
+    apispec.spec.path(view=UserList, app=current_app)
+    apispec.spec.path(view=CustomerList, app=current_app)
 
 
 @blueprint.errorhandler(ValidationError)
