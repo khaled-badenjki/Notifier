@@ -1,22 +1,22 @@
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
-from notifier.api.schemas import UserSchema
-from notifier.models import User
+from notifier.api.schemas import CustomerSchema
+from notifier.models import Customer
 from notifier.extensions import db
 from notifier.commons.pagination import paginate
 
 
-class UserResource(Resource):
+class CustomerResource(Resource):
     """Single object resource
 
     ---
     get:
       tags:
-        - user api (authentication model)
+        - customer api
       parameters:
         - in: path
-          name: user_id
+          name: customer_id
           schema:
             type: integer
       responses:
@@ -26,22 +26,22 @@ class UserResource(Resource):
               schema:
                 type: object
                 properties:
-                  user: UserSchema
+                  customer: CustomerSchema
         404:
-          description: user does not exists
+          description: customer does not exists
     put:
       tags:
-        - user api (authentication model)
+        - customer api
       parameters:
         - in: path
-          name: user_id
+          name: customer_id
           schema:
             type: integer
       requestBody:
         content:
           application/json:
             schema:
-              UserSchema
+              CustomerSchema
       responses:
         200:
           content:
@@ -51,16 +51,16 @@ class UserResource(Resource):
                 properties:
                   msg:
                     type: string
-                    example: user updated
-                  user: UserSchema
+                    example: customer updated
+                  customer: CustomerSchema
         404:
-          description: user does not exists
+          description: customer does not exists
     delete:
       tags:
-        - user api (authentication model)
+        - customer api
       parameters:
         - in: path
-          name: user_id
+          name: customer_id
           schema:
             type: integer
       responses:
@@ -72,42 +72,42 @@ class UserResource(Resource):
                 properties:
                   msg:
                     type: string
-                    example: user deleted
+                    example: customer deleted
         404:
-          description: user does not exists
+          description: customer does not exists
     """
 
     method_decorators = [jwt_required]
 
-    def get(self, user_id):
-        schema = UserSchema()
-        user = User.query.get_or_404(user_id)
-        return {"user": schema.dump(user)}
+    def get(self, customer_id):
+        schema = CustomerSchema()
+        customer = Customer.query.get_or_404(customer_id)
+        return {"customer": schema.dump(customer)}
 
-    def put(self, user_id):
-        schema = UserSchema(partial=True)
-        user = User.query.get_or_404(user_id)
-        user = schema.load(request.json, instance=user)
+    def put(self, customer_id):
+        schema = CustomerSchema(partial=True)
+        customer = Customer.query.get_or_404(customer_id)
+        customer = schema.load(request.json, instance=customer)
 
         db.session.commit()
 
-        return {"msg": "user updated", "user": schema.dump(user)}
+        return {"msg": "customer updated", "customer": schema.dump(customer)}
 
-    def delete(self, user_id):
-        user = User.query.get_or_404(user_id)
-        db.session.delete(user)
+    def delete(self, customer_id):
+        customer = Customer.query.get_or_404(customer_id)
+        db.session.delete(customer)
         db.session.commit()
 
-        return {"msg": "user deleted"}
+        return {"msg": "customer deleted"}
 
 
-class UserList(Resource):
+class CustomerList(Resource):
     """Creation and get_all
 
     ---
     get:
       tags:
-        - user api (authentication model)
+        - customer api
       responses:
         200:
           content:
@@ -120,15 +120,15 @@ class UserList(Resource):
                       results:
                         type: array
                         items:
-                          $ref: '#/components/schemas/UserSchema'
+                          $ref: '#/components/schemas/CustomerSchema'
     post:
       tags:
-        - user api (authentication model)
+        - customer api
       requestBody:
         content:
           application/json:
             schema:
-              UserSchema
+              CustomerSchema
       responses:
         201:
           content:
@@ -138,22 +138,23 @@ class UserList(Resource):
                 properties:
                   msg:
                     type: string
-                    example: user created
-                  user: UserSchema
+                    example: customer created
+                  customer: CustomerSchema
     """
 
     method_decorators = [jwt_required]
 
     def get(self):
-        schema = UserSchema(many=True)
-        query = User.query
+        schema = CustomerSchema(many=True)
+        query = Customer.query
         return paginate(query, schema)
 
     def post(self):
-        schema = UserSchema()
-        user = schema.load(request.json)
-
-        db.session.add(user)
+        schema = CustomerSchema()
+        customer = schema.load(request.json)
+        if Customer.customer_exists(customer.email):
+            return {'error': 'User with this email already exists'}, 422
+        db.session.add(customer)
         db.session.commit()
 
-        return {"msg": "user created", "user": schema.dump(user)}, 201
+        return {"msg": "customer created", "customer": schema.dump(customer)}, 201
