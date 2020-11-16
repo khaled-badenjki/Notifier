@@ -16,3 +16,13 @@ class Customer(db.Model):
     @staticmethod
     def customer_exists(email):
         return Customer.query.filter(Customer.email == email).first() is not None
+
+
+class Group(db.Model):
+    """Group model for group notifications"""
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), nullable=False)
+
+    def __repr__(self):
+        return "<Group %s>" % self.name
