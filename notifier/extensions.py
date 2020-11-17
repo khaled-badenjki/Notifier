@@ -10,6 +10,7 @@ from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from celery import Celery
 from flask_babel import Babel
+from marshmallow import validate
 
 from notifier.commons.apispec import APISpecExt
 
@@ -22,3 +23,4 @@ apispec = APISpecExt()
 pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 celery = Celery()
 babel = Babel()
+ma_validate = validate

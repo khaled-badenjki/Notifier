@@ -35,7 +35,7 @@ api.add_resource(GroupResource, "/groups/<int:group_id>", endpoint="group_by_id"
 api.add_resource(GroupList, "/groups", endpoint="groups")
 
 api.add_resource(DeviceResource, "/devices/<int:device_id>", endpoint="device_by_id")
-api.add_resource(DeviceList, "/devices", endpoin="devices")
+api.add_resource(DeviceList, "/devices", endpoint="devices")
 
 
 @blueprint.before_app_first_request

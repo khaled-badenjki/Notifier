@@ -88,8 +88,6 @@ class CustomerResource(Resource):
         schema = CustomerSchema(partial=True)
         customer = Customer.query.get_or_404(customer_id)
         customer = schema.load(request.json, instance=customer)
-        if Customer.customer_exists(customer.email):
-            return {"error": "User with this email already exists"}, 422
         db.session.commit()
 
         return {"msg": "customer updated", "customer": schema.dump(customer)}
