@@ -1,6 +1,12 @@
 from notifier.extensions import db
 
 
+customer_group = db.Table('customer_group',
+    db.Column('customer_id', db.Integer, db.ForeignKey('customer.id'), primary_key=True),
+    db.Column('group_id', db.Integer, db.ForeignKey('group.id'), primary_key=True)
+)
+
+
 class Customer(db.Model):
     """Customer model for notifications"""
 
