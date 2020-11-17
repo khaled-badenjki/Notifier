@@ -15,6 +15,8 @@ class Customer(db.Model):
     email = db.Column(db.String(80), unique=True, nullable=False)
     phone = db.Column(db.String(30), unique=True, nullable=False)
     language = db.Column(db.String(30), default='ar', nullable=True)
+    groups = db.relationship('Group', secondary=customer_group, lazy='subquery',
+        backref=db.backref('group_customers', lazy=True))
 
     def __repr__(self):
         return "<Customer %s>" % self.name
@@ -30,7 +32,7 @@ class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     customers = db.relationship('Customer', secondary=customer_group, lazy='subquery',
-        backref=db.backref('groups', lazy=True))
+        backref=db.backref('customer_groups', lazy=True))
 
     def __repr__(self):
         return "<Group %s>" % self.name
