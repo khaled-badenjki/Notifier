@@ -25,7 +25,7 @@ jobs:
       - name: Lint
         run: docker-compose run web tox -e lint
 
-  build and test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code Repository
