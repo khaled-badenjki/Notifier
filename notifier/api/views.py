@@ -2,7 +2,14 @@ from flask import Blueprint, current_app, jsonify
 from flask_restful import Api
 from marshmallow import ValidationError
 from notifier.extensions import apispec
-from notifier.api.resources import UserResource, UserList, CustomerResource, CustomerList, GroupResource, GroupList
+from notifier.api.resources import (
+    UserResource,
+    UserList,
+    CustomerResource,
+    CustomerList,
+    GroupResource,
+    GroupList,
+)
 from notifier.api.schemas import UserSchema, CustomerSchema, GroupSchema
 
 
@@ -13,7 +20,9 @@ api = Api(blueprint)
 api.add_resource(UserResource, "/users/<int:user_id>", endpoint="user_by_id")
 api.add_resource(UserList, "/users", endpoint="users")
 
-api.add_resource(CustomerResource, "/customers/<int:customer_id>", endpoint="customer_by_id")
+api.add_resource(
+    CustomerResource, "/customers/<int:customer_id>", endpoint="customer_by_id"
+)
 api.add_resource(CustomerList, "/customers", endpoint="customers")
 
 api.add_resource(GroupResource, "/groups/<int:group_id>", endpoint="group_by_id")
