@@ -8,7 +8,24 @@ env:
 on: [push]
 
 jobs:
-  build:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install Tox and any other packages
+        run: pip install tox
+
+      - name: Lint
+        run: docker-compose run web tox -e lint
+
+  build and test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code Repository
