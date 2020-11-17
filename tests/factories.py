@@ -1,5 +1,5 @@
 import factory
-from notifier.models import User, Customer
+from notifier.models import User, Customer, Group
 
 
 class UserFactory(factory.Factory):
@@ -20,3 +20,10 @@ class CustomerFactory(factory.Factory):
 
     class Meta:
         model = Customer
+
+
+class GroupFactory(factory.Factory):
+    name = factory.Sequence(lambda n: "%d" % n)
+
+    class Meta:
+        model = Group

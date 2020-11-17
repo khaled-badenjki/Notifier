@@ -1,7 +1,7 @@
 from flask import Flask
 
 from notifier import auth, api
-from notifier.extensions import db, jwt, migrate, apispec, celery
+from notifier.extensions import db, jwt, migrate, apispec, celery, babel
 
 
 def create_app(testing=False, cli=False):
@@ -16,6 +16,7 @@ def create_app(testing=False, cli=False):
     configure_apispec(app)
     register_blueprints(app)
     init_celery(app)
+    babel.init_app(app)
 
     return app
 
