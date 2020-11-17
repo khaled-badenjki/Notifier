@@ -29,6 +29,8 @@ class Group(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
+    customers = db.relationship('Customer', secondary=customer_group, lazy='subquery',
+        backref=db.backref('groups', lazy=True))
 
     def __repr__(self):
         return "<Group %s>" % self.name
