@@ -28,3 +28,18 @@ def test_create_sms_notification(client, db, admin_headers):
 
     assert notification.customer_id == 1
     assert notification.text == "hello there"
+
+
+def test_get_all_sms_notification(client, db, sms_notification_factory, admin_headers):
+    sms_notifications_url = url_for('api.sms_notifications')
+    sms_notifications = sms_notification_factory.create_batch(30)
+
+    db.session.add_all(sms_notifications)
+    db.session.commit()
+
+    rep = client.get(sms_notifications_url, headers=admin_headers)
+    assert rep.status_code == 200
+
+    results = rep.get_json()
+    for sms_notification in sms_notifications:
+        assert any(u["id"] == sms_notification.id for u in results["results"])

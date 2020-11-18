@@ -1,5 +1,5 @@
 import factory
-from notifier.models import User, Customer, Group, Device
+from notifier.models import User, Customer, Group, Device, Notification
 
 
 class UserFactory(factory.Factory):
@@ -37,3 +37,13 @@ class DeviceFactory(factory.Factory):
 
     class Meta:
         model = Device
+
+
+class SmsNotificationFactory(factory.Factory):
+    customer_id = factory.Sequence(lambda n: '%04d' % n)
+    text = factory.Sequence(lambda n: 'sms notification number %04d' % n)
+    type = "sms"
+    is_dynamic = factory.Iterator([True, False])
+
+    class Meta:
+        model = Notification

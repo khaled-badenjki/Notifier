@@ -6,13 +6,20 @@ from notifier.models import User
 from notifier.app import create_app
 from notifier.extensions import db as _db
 from pytest_factoryboy import register
-from tests.factories import UserFactory, CustomerFactory, GroupFactory, DeviceFactory
+from tests.factories import (
+    UserFactory,
+    CustomerFactory,
+    GroupFactory,
+    DeviceFactory,
+    SmsNotificationFactory,
+)
 
 
 register(UserFactory)
 register(CustomerFactory)
 register(GroupFactory)
 register(DeviceFactory)
+register(SmsNotificationFactory)
 
 
 @pytest.fixture(scope="session")
