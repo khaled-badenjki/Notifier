@@ -42,7 +42,6 @@ api.add_resource(DeviceList, "/devices", endpoint="devices")
 def register_views():
     apispec.spec.components.schema("UserSchema", schema=UserSchema)
     apispec.spec.components.schema("CustomerSchema", schema=CustomerSchema)
-    apispec.spec.components.schema("GroupSchema", schema=GroupSchema)
     apispec.spec.components.schema("DeviceSchema", schema=DeviceSchema)
 
     apispec.spec.path(view=UserResource, app=current_app)

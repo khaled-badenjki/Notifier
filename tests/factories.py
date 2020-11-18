@@ -1,5 +1,5 @@
 import factory
-from notifier.models import User, Customer, Group
+from notifier.models import User, Customer, Group, Device
 
 
 class UserFactory(factory.Factory):
@@ -27,3 +27,13 @@ class GroupFactory(factory.Factory):
 
     class Meta:
         model = Group
+
+
+class DeviceFactory(factory.Factory):
+    registration_id = factory.Sequence(lambda n: '12as1213%04d' % n)
+    customer_id = factory.Sequence(lambda n: '%04d' % n)
+    type = factory.Iterator(["ios", "android"])
+    version = factory.Sequence(lambda n: "Agent %03d" % n)
+
+    class Meta:
+        model = Device

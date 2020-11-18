@@ -8,7 +8,6 @@ class DeviceSchema(ma.SQLAlchemyAutoSchema):
     customer_id = ma.Int()
     registration_id = ma.String()
     type = ma.String(validate=ma_validate.OneOf(["ios", "android"]))
-    version = ma.String()
 
     class Meta:
         model = Device
