@@ -43,6 +43,22 @@ class SmsNotificationList(Resource):
     """Creation and get_all
 
     ---
+    get:
+      tags:
+        - notification api
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResult'
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/NotificationSchema'
     post:
       tags:
         - notification api
@@ -65,6 +81,11 @@ class SmsNotificationList(Resource):
     """
 
     method_decorators = [jwt_required]
+
+    def get(self):
+        schema = NotificationSchema(exclude=["type",], many=True)
+        query = Notification.query
+        return paginate(query, schema)
 
     def post(self):
         # TODO: find out how to remove status field from post request schema docs
