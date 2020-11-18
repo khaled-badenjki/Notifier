@@ -1,4 +1,4 @@
-from notifier.extensions import db
+from notifier.extensions import db, db_event
 import datetime
 
 
@@ -21,3 +21,8 @@ class Notification(db.Model):
 
     def __repr__(self):
         return "<Notification %s>" % self.id
+
+
+@db_event.listens_for(Notification, "after_insert")
+def dummy_task(mapper, connection, target):
+    print("after_insert", mapper, connection, target)
