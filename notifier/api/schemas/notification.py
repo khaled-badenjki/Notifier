@@ -5,9 +5,9 @@ from notifier.extensions import ma, db, ma_validate
 class NotificationSchema(ma.SQLAlchemyAutoSchema):
 
     id = ma.Int(dump_only=True)
-    text = ma.String()
-    customer_id = ma.Int()
-    is_dynamic = ma.Bool()
+    text = ma.String(required=True)
+    customer_id = ma.Int(required=True)
+    is_dynamic = ma.Bool(default=False)
     status = ma.String(validate=ma_validate.OneOf(["processing", "sent", "failed",]))
 
     class Meta:
