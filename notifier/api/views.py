@@ -39,8 +39,14 @@ api.add_resource(GroupList, "/groups", endpoint="groups")
 api.add_resource(DeviceResource, "/devices/<int:device_id>", endpoint="device_by_id")
 api.add_resource(DeviceList, "/devices", endpoint="devices")
 
-api.add_resource(SmsNotificationResource, "/notifications/sms/<int:notification_id>", endpoint="sms_notification_by_id")
-api.add_resource(SmsNotificationList, "/notifications/sms", endpoint="sms_notifications")
+api.add_resource(
+    SmsNotificationResource,
+    "/notifications/sms/<int:notification_id>",
+    endpoint="sms_notification_by_id",
+)
+api.add_resource(
+    SmsNotificationList, "/notifications/sms", endpoint="sms_notifications"
+)
 
 
 @blueprint.before_app_first_request

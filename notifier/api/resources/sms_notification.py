@@ -35,7 +35,9 @@ class SmsNotificationResource(Resource):
 
     def get(self, notification_id):
         schema = NotificationSchema(exclude=["type"])
-        notification = Notification.query.filter(Notification.type == "sms").get_or_404(notification_id)
+        notification = Notification.query.filter(Notification.type == "sms").get_or_404(
+            notification_id
+        )
         return {"sms notification": schema.dump(notification)}
 
 
@@ -83,13 +85,23 @@ class SmsNotificationList(Resource):
     method_decorators = [jwt_required]
 
     def get(self):
-        schema = NotificationSchema(exclude=["type", ], many=True)
+        schema = NotificationSchema(
+            exclude=[
+                "type",
+            ],
+            many=True,
+        )
         query = Notification.query
         return paginate(query, schema)
 
     def post(self):
         # TODO: find out how to remove status field from post request schema docs
-        schema = NotificationSchema(exclude=["type", "status", ])
+        schema = NotificationSchema(
+            exclude=[
+                "type",
+                "status",
+            ]
+        )
         notification = schema.load(request.json)
         if not Customer.query.get(notification.customer_id):
             return {"error": "customer_id doesn't exist"}, 422
@@ -97,4 +109,7 @@ class SmsNotificationList(Resource):
         db.session.add(notification)
         db.session.commit()
 
-        return {"msg": "sms notification added to queue", "notification": schema.dump(notification)}, 201
+        return {
+            "msg": "sms notification added to queue",
+            "notification": schema.dump(notification),
+        }, 201
