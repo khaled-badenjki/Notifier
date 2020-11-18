@@ -13,7 +13,7 @@ class Notification(db.Model):
     type = db.Column(db.Enum("sms", "push", name="NotificationTypes"))
     customer_id = db.Column(db.Integer, db.ForeignKey("customer.id"))
     is_dynamic = db.Column(db.Boolean)
-    created_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.utcnow)
 
     def __repr__(self):

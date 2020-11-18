@@ -8,9 +8,10 @@ class NotificationSchema(ma.SQLAlchemyAutoSchema):
     text = ma.String()
     customer_id = ma.Int()
     is_dynamic = ma.Bool()
-    type = ma.String(validate=ma_validate.OneOf(["push", "sms"]))
+    status = ma.String(validate=ma_validate.OneOf(["processing", "sent", "failed",]))
 
     class Meta:
         model = Notification
         sqla_session = db.session
         load_instance = True
+        exclude = ("type", "created_at", "updated_at",)

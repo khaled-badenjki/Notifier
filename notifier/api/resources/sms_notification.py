@@ -67,7 +67,8 @@ class SmsNotificationList(Resource):
     method_decorators = [jwt_required]
 
     def post(self):
-        schema = NotificationSchema(exclude=["type"])
+        # TODO: find out how to remove status field from post request schema docs
+        schema = NotificationSchema(exclude=["type", "status",])
         notification = schema.load(request.json)
         notification.type = "sms"
         db.session.add(notification)
