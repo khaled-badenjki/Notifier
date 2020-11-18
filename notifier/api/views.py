@@ -15,7 +15,6 @@ from notifier.api.resources import (
 from notifier.api.schemas import (
     UserSchema,
     CustomerSchema,
-    GroupSchema,
     DeviceSchema,
 )
 
