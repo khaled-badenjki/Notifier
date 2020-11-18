@@ -9,9 +9,14 @@ from notifier.api.resources import (
     CustomerList,
     GroupResource,
     GroupList,
+    DeviceResource,
+    DeviceList,
 )
-from notifier.api.schemas import UserSchema, CustomerSchema, GroupSchema
-
+from notifier.api.schemas import (
+    UserSchema,
+    CustomerSchema,
+    DeviceSchema,
+)
 
 blueprint = Blueprint("api", __name__, url_prefix="/api/v1")
 api = Api(blueprint)
@@ -28,20 +33,25 @@ api.add_resource(CustomerList, "/customers", endpoint="customers")
 api.add_resource(GroupResource, "/groups/<int:group_id>", endpoint="group_by_id")
 api.add_resource(GroupList, "/groups", endpoint="groups")
 
+api.add_resource(DeviceResource, "/devices/<int:device_id>", endpoint="device_by_id")
+api.add_resource(DeviceList, "/devices", endpoint="devices")
+
 
 @blueprint.before_app_first_request
 def register_views():
     apispec.spec.components.schema("UserSchema", schema=UserSchema)
     apispec.spec.components.schema("CustomerSchema", schema=CustomerSchema)
-    apispec.spec.components.schema("GroupSchema", schema=GroupSchema)
+    apispec.spec.components.schema("DeviceSchema", schema=DeviceSchema)
 
     apispec.spec.path(view=UserResource, app=current_app)
     apispec.spec.path(view=CustomerResource, app=current_app)
     apispec.spec.path(view=GroupResource, app=current_app)
+    apispec.spec.path(view=DeviceResource, app=current_app)
 
     apispec.spec.path(view=UserList, app=current_app)
     apispec.spec.path(view=CustomerList, app=current_app)
     apispec.spec.path(view=GroupList, app=current_app)
+    apispec.spec.path(view=DeviceList, app=current_app)
 
 
 @blueprint.errorhandler(ValidationError)

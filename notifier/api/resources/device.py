@@ -1,22 +1,22 @@
 from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
-from notifier.api.schemas import CustomerSchema
-from notifier.models import Customer
+from notifier.api.schemas import DeviceSchema
+from notifier.models import Device
 from notifier.extensions import db
 from notifier.commons.pagination import paginate
 
 
-class CustomerResource(Resource):
+class DeviceResource(Resource):
     """Single object resource
 
     ---
     get:
       tags:
-        - customer api
+        - device api
       parameters:
         - in: path
-          name: customer_id
+          name: device_id
           schema:
             type: integer
       responses:
@@ -26,22 +26,22 @@ class CustomerResource(Resource):
               schema:
                 type: object
                 properties:
-                  customer: CustomerSchema
+                  device: DeviceSchema
         404:
-          description: customer does not exists
+          description: device does not exists
     put:
       tags:
-        - customer api
+        - device api
       parameters:
         - in: path
-          name: customer_id
+          name: device_id
           schema:
             type: integer
       requestBody:
         content:
           application/json:
             schema:
-              CustomerSchema
+              DeviceSchema
       responses:
         200:
           content:
@@ -51,16 +51,16 @@ class CustomerResource(Resource):
                 properties:
                   msg:
                     type: string
-                    example: customer updated
-                  customer: CustomerSchema
+                    example: device updated
+                  device: DeviceSchema
         404:
-          description: customer does not exists
+          description: device does not exists
     delete:
       tags:
-        - customer api
+        - device api
       parameters:
         - in: path
-          name: customer_id
+          name: device_id
           schema:
             type: integer
       responses:
@@ -72,41 +72,41 @@ class CustomerResource(Resource):
                 properties:
                   msg:
                     type: string
-                    example: customer deleted
+                    example: device deleted
         404:
-          description: customer does not exists
+          description: device does not exists
     """
 
     method_decorators = [jwt_required]
 
-    def get(self, customer_id):
-        schema = CustomerSchema()
-        customer = Customer.query.get_or_404(customer_id)
-        return {"customer": schema.dump(customer)}
+    def get(self, device_id):
+        schema = DeviceSchema()
+        device = Device.query.get_or_404(device_id)
+        return {"device": schema.dump(device)}
 
-    def put(self, customer_id):
-        schema = CustomerSchema(partial=True)
-        customer = Customer.query.get_or_404(customer_id)
-        customer = schema.load(request.json, instance=customer)
+    def put(self, device_id):
+        schema = DeviceSchema(partial=True)
+        device = Device.query.get_or_404(device_id)
+        device = schema.load(request.json, instance=device)
         db.session.commit()
 
-        return {"msg": "customer updated", "customer": schema.dump(customer)}
+        return {"msg": "device updated", "device": schema.dump(device)}
 
-    def delete(self, customer_id):
-        customer = Customer.query.get_or_404(customer_id)
-        db.session.delete(customer)
+    def delete(self, device_id):
+        device = Device.query.get_or_404(device_id)
+        db.session.delete(device)
         db.session.commit()
 
-        return {"msg": "customer deleted"}
+        return {"msg": "device deleted"}
 
 
-class CustomerList(Resource):
+class DeviceList(Resource):
     """Creation and get_all
 
     ---
     get:
       tags:
-        - customer api
+        - device api
       responses:
         200:
           content:
@@ -119,15 +119,15 @@ class CustomerList(Resource):
                       results:
                         type: array
                         items:
-                          $ref: '#/components/schemas/CustomerSchema'
+                          $ref: '#/components/schemas/DeviceSchema'
     post:
       tags:
-        - customer api
+        - device api
       requestBody:
         content:
           application/json:
             schema:
-              CustomerSchema
+              DeviceSchema
       responses:
         201:
           content:
@@ -137,24 +137,21 @@ class CustomerList(Resource):
                 properties:
                   msg:
                     type: string
-                    example: customer created
-                  customer: CustomerSchema
+                    example: device created
+                  device: DeviceSchema
     """
 
     method_decorators = [jwt_required]
 
     def get(self):
-        schema = CustomerSchema(many=True)
-        query = Customer.query
+        schema = DeviceSchema(many=True)
+        query = Device.query
         return paginate(query, schema)
 
     def post(self):
-        schema = CustomerSchema()
-        customer = schema.load(request.json)
-        # TODO: handle the logic so that the posted group is not created, but only assigned to the customer
-        if Customer.customer_exists(customer.email):
-            return {"error": "User with this email already exists"}, 422
-        db.session.add(customer)
+        schema = DeviceSchema()
+        device = schema.load(request.json)
+        db.session.add(device)
         db.session.commit()
 
-        return {"msg": "customer created", "customer": schema.dump(customer)}, 201
+        return {"msg": "device created", "device": schema.dump(device)}, 201
