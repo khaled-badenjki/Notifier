@@ -83,13 +83,13 @@ class SmsNotificationList(Resource):
     method_decorators = [jwt_required]
 
     def get(self):
-        schema = NotificationSchema(exclude=["type",], many=True)
+        schema = NotificationSchema(exclude=["type", ], many=True)
         query = Notification.query
         return paginate(query, schema)
 
     def post(self):
         # TODO: find out how to remove status field from post request schema docs
-        schema = NotificationSchema(exclude=["type", "status",])
+        schema = NotificationSchema(exclude=["type", "status", ])
         notification = schema.load(request.json)
         if not Customer.query.get(notification.customer_id):
             return {"error": "customer_id doesn't exist"}, 422

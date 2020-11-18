@@ -3,7 +3,7 @@ from flask import url_for
 from notifier.models import Notification
 
 
-def test_create_sms_notification(client, db, admin_headers):
+def test_create_sms_notification(client, db, customer_factory, admin_headers):
     # test bad data
     sms_notifications_url = url_for('api.sms_notifications')
     data = {"customer_id": 1}
@@ -16,9 +16,9 @@ def test_create_sms_notification(client, db, admin_headers):
     assert rep.status_code == 422
 
     # create customer to pass validation of customer exists
-    customers_url = url_for('api.customers')
-    customer_data = {"name": "created", "email": "created@mail.com", "phone": "01111111"}
-    client.post(customers_url, json=customer_data, headers=admin_headers)
+    customer = customer_factory.create()
+    db.session.add(customer)
+    db.session.commit()
 
     rep = client.post(sms_notifications_url, json=data, headers=admin_headers)
     assert rep.status_code == 201
