@@ -2,7 +2,7 @@ from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 from notifier.api.schemas import NotificationSchema
-from notifier.models import Notification
+from notifier.models import Notification, Customer
 from notifier.extensions import db
 from notifier.commons.pagination import paginate
 
@@ -70,6 +70,8 @@ class SmsNotificationList(Resource):
         # TODO: find out how to remove status field from post request schema docs
         schema = NotificationSchema(exclude=["type", "status",])
         notification = schema.load(request.json)
+        if not Customer.query.get(notification.customer_id):
+            return {"error": "customer_id doesn't exist"}, 422
         notification.type = "sms"
         db.session.add(notification)
         db.session.commit()
