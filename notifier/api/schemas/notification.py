@@ -1,5 +1,5 @@
 from notifier.models import Notification
-from notifier.extensions import ma, db
+from notifier.extensions import ma, db, ma_validate
 
 
 class NotificationSchema(ma.SQLAlchemyAutoSchema):
@@ -8,6 +8,7 @@ class NotificationSchema(ma.SQLAlchemyAutoSchema):
     text = ma.String()
     customer_id = ma.Int()
     is_dynamic = ma.Bool()
+    type = ma.String(validate=ma_validate.OneOf(["push", "sms"]))
 
     class Meta:
         model = Notification
