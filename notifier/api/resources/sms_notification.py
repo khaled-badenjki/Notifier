@@ -2,7 +2,7 @@ from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 from notifier.api.schemas import NotificationSchema
-from notifier.models import Notification, Customer
+from notifier.models import Notification, Customer, Group
 from notifier.extensions import db
 from notifier.commons.pagination import paginate
 
@@ -101,6 +101,26 @@ class SmsNotificationList(Resource):
             ]
         )
         notification = schema.load(request.json)
+        if notification.group_id:
+            group = Group.query.get_or_404(notification.group_id)
+            customers = group.group_customers
+            for customer in customers:
+                db.session.add_all(
+                    [
+                        Notification(
+                            customer_id=customer.id,
+                            type="sms",
+                            text=notification.text,
+                            group_id=notification.group_id,
+                            is_dynamic=notification.is_dynamic,
+                        )
+                    ]
+                )
+                db.session.flush()
+            db.session.commit()
+            return {
+                "msg": "sms group notifications added to queue",
+            }, 201
         if not Customer.query.get(notification.customer_id):
             return {"error": "customer_id doesn't exist"}, 422
         notification.type = "sms"
