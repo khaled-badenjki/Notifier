@@ -1,3 +1,5 @@
+from notifier.models.device import Device
+
 from notifier.extensions import db, db_event
 from notifier.tasks import notification
 from notifier.models import Customer
@@ -29,3 +31,11 @@ def after_insert_notification(mapper, connection, target):
         notification.get_sms_api.delay(
             notification_id=target.id, phone=customer.phone, text=target.text
         )
+    elif target.type == "push":
+        devices = Device.query.filter(Device.customer_id == customer.id).all()
+        for device in devices:
+            notification.get_push_api.delay(
+                notification_id=target.id,
+                registration_id=device.registration_id,
+                text=target.text,
+            )
