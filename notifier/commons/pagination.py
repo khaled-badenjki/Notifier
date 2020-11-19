@@ -9,7 +9,7 @@ DEFAULT_PAGE_NUMBER = 1
 def paginate(query, schema):
     page = request.args.get("page", DEFAULT_PAGE_NUMBER)
     per_page = request.args.get("page_size", DEFAULT_PAGE_SIZE)
-    page_obj = query.paginate(page=page, per_page=per_page)
+    page_obj = query.paginate(page=int(page), per_page=int(per_page))
     next_ = url_for(
         request.endpoint,
         page=page_obj.next_num if page_obj.has_next else page_obj.page,

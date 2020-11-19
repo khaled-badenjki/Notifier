@@ -1,22 +1,14 @@
 from notifier.models import Notification
-from notifier.extensions import ma, db, ma_validate
+from notifier.extensions import ma, db
 
 
 class NotificationSchema(ma.SQLAlchemyAutoSchema):
 
     id = ma.Int(dump_only=True)
     text = ma.String(required=True)
-    customer_id = ma.Int(required=True)
+    customer_id = ma.Int(required=False)
+    group_id = ma.Int(required=False)
     is_dynamic = ma.Bool(default=False)
-    status = ma.String(
-        validate=ma_validate.OneOf(
-            [
-                "processing",
-                "sent",
-                "failed",
-            ]
-        )
-    )
 
     class Meta:
         model = Notification
