@@ -48,31 +48,28 @@ Technologies Used
 Installation
 ------------
 
-* After downloading or cloning the code, navigate to the base directory and run
+* After downloading or cloning the code, navigate to the base directory and run::
 
     $ make init
 
-this command will run the necessary docker-compose commands to build and run the containers. It will also create
-initial migration files and seed admin user to be able to log in
+this command will run the necessary docker-compose commands to build and run the containers. It will also create initial migration files and seed admin user to be able to log in
 
-* To run the migration files:
+* To run the migration files::
 
     $ make db-migrate
 
-* Next step is upgrading the databse:
+* Next step is upgrading the database::
 
     $ make db-upgrade
 
-* (optional) Run this command to seed the database with customers, devices and groups. **Warning** this command deletes all
-previous data
+* (optional) Run this command to seed the database with customers, devices and groups. **Warning** this command deletes all previous data::
 
     $ make db-seed
-
 
 Linting
 -------
 
-This project code style is black, and it uses flake8 to assure the quality of the code
+This project code style is black, and it uses flake8 to assure the quality of the code::
 
     $ make lint
 
@@ -81,7 +78,7 @@ will show run the necessary command to perform lint check on the code. Hopefully
 
 Testing
 -------
+To run all test suite, run this command::
 
     $ make test
-
 
