@@ -1,4 +1,6 @@
 from notifier.extensions import db, db_event
+from notifier.tasks import notification
+from notifier.models import Customer
 import datetime
 
 
@@ -24,5 +26,7 @@ class Notification(db.Model):
 
 
 @db_event.listens_for(Notification, "after_insert")
-def dummy_task(mapper, connection, target):
-    print("after_insert", mapper, connection, target)
+def after_insert_notification(mapper, connection, target):
+    customer = Customer.query.get(target.customer_id)
+    if target.type == "sms":
+        notification.get_sms_api.delay(target.id, customer.phone, target.text)
