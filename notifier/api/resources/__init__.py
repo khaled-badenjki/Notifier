@@ -6,6 +6,10 @@ from notifier.api.resources.sms_notification import (
     SmsNotificationResource,
     SmsNotificationList,
 )
+from notifier.api.resources.push_notification import (
+    PushNotificationResource,
+    PushNotificationList,
+)
 
 __all__ = [
     "UserResource",
@@ -18,4 +22,6 @@ __all__ = [
     "DeviceList",
     "SmsNotificationResource",
     "SmsNotificationList",
+    "PushNotificationResource",
+    "PushNotificationList",
 ]

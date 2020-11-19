@@ -7,7 +7,7 @@ from notifier.extensions import db
 from notifier.commons.pagination import paginate
 
 
-class SmsNotificationResource(Resource):
+class PushNotificationResource(Resource):
     """Single object resource
 
     ---
@@ -35,13 +35,13 @@ class SmsNotificationResource(Resource):
 
     def get(self, notification_id):
         schema = NotificationSchema(exclude=["type"])
-        notification = Notification.query.filter(Notification.type == "sms").get_or_404(
-            notification_id
-        )
-        return {"sms notification": schema.dump(notification)}
+        notification = Notification.query.filter(
+            Notification.type == "push"
+        ).get_or_404(notification_id)
+        return {"push notification": schema.dump(notification)}
 
 
-class SmsNotificationList(Resource):
+class PushNotificationList(Resource):
     """Creation and get_all
 
     ---
@@ -78,7 +78,7 @@ class SmsNotificationList(Resource):
                 properties:
                   msg:
                     type: string
-                    example: sms notification added to queue
+                    example: push notification added to queue
                   notification: NotificationSchema
     """
 
@@ -109,7 +109,7 @@ class SmsNotificationList(Resource):
                     [
                         Notification(
                             customer_id=customer.id,
-                            type="sms",
+                            type="push",
                             text=notification.text,
                             group_id=notification.group_id,
                             is_dynamic=notification.is_dynamic,
@@ -119,15 +119,15 @@ class SmsNotificationList(Resource):
                 db.session.flush()
             db.session.commit()
             return {
-                "msg": "sms group notifications added to queue",
+                "msg": "push group notifications added to queue",
             }, 201
         if not Customer.query.get(notification.customer_id):
             return {"error": "customer_id doesn't exist"}, 422
-        notification.type = "sms"
+        notification.type = "push"
         db.session.add(notification)
         db.session.commit()
 
         return {
-            "msg": "sms notification added to queue",
+            "msg": "push notification added to queue",
             "notification": schema.dump(notification),
         }, 201

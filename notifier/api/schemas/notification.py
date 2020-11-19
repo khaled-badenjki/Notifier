@@ -8,7 +8,7 @@ class NotificationSchema(ma.SQLAlchemyAutoSchema):
     text = ma.String(required=True)
     customer_id = ma.Int(required=False)
     group_id = ma.Int(required=False)
-    is_dynamic = ma.Bool(default=False)
+    is_dynamic = ma.Bool(default=False, required=True)
 
     class Meta:
         model = Notification

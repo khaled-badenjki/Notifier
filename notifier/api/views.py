@@ -13,6 +13,8 @@ from notifier.api.resources import (
     DeviceList,
     SmsNotificationResource,
     SmsNotificationList,
+    PushNotificationResource,
+    PushNotificationList,
 )
 from notifier.api.schemas import (
     UserSchema,
@@ -48,6 +50,15 @@ api.add_resource(
     SmsNotificationList, "/notifications/sms", endpoint="sms_notifications"
 )
 
+api.add_resource(
+    PushNotificationResource,
+    "/notifications/push/<int:notification_id>",
+    endpoint="push_notification_by_id",
+)
+api.add_resource(
+    PushNotificationList, "/notifications/push", endpoint="push_notifications"
+)
+
 
 @blueprint.before_app_first_request
 def register_views():
@@ -61,12 +72,14 @@ def register_views():
     apispec.spec.path(view=GroupResource, app=current_app)
     apispec.spec.path(view=DeviceResource, app=current_app)
     apispec.spec.path(view=SmsNotificationResource, app=current_app)
+    apispec.spec.path(view=PushNotificationResource, app=current_app)
 
     apispec.spec.path(view=UserList, app=current_app)
     apispec.spec.path(view=CustomerList, app=current_app)
     apispec.spec.path(view=GroupList, app=current_app)
     apispec.spec.path(view=DeviceList, app=current_app)
     apispec.spec.path(view=SmsNotificationList, app=current_app)
+    apispec.spec.path(view=PushNotificationList, app=current_app)
 
 
 @blueprint.errorhandler(ValidationError)
