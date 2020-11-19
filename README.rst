@@ -66,16 +66,17 @@ this command will run the necessary docker-compose commands to build and run the
 
     make db-seed
 
+Monitoring
+----------
+
+Navigate to http://localhost:8888/ to see a beautiful presentation of running tasks, queues and workers
+
+
 API Documentation
 -----------------
 
 No that the service is up and running, navigate to http://localhost:5000/swagger-ui and you should see a complete documentation of the API
 
-
-Monitoring
-----------
-
-Navigate to http://localhost:8888/ to see a beautiful presentation of running tasks, queues and workers
 
 Notification API
 ^^^^^^^^^^^^^^^^
