@@ -83,7 +83,7 @@ Notification API
 
 This endpoint might be a bit confusing. Although it accepts to parameters `group_id` and `customer_id`, it worth mentioning that if both arguments are passed the notification will be treated as a group notification and not singular
 
-example of notification request body::
+example of notification post request body (works with both sms and push endpoints)::
 
     {
         "text": "Dear @calculate_customer_name, you have a @provided_discount % promotion valid till @provided_valid_till. Activate it using this promo code: @provided_promo_code",
