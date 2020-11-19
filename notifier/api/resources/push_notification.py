@@ -5,6 +5,7 @@ from notifier.api.schemas import NotificationSchema
 from notifier.models import Notification, Customer, Group
 from notifier.extensions import db
 from notifier.commons.pagination import paginate
+from notifier import helper
 
 
 class PushNotificationResource(Resource):
@@ -102,6 +103,7 @@ class PushNotificationList(Resource):
             ]
         )
         notification = schema.load(request.json)
+        extra_params = request.json["extra_params"]
         if notification.group_id:
             group = Group.query.get_or_404(notification.group_id)
             customers = group.group_customers
@@ -111,7 +113,7 @@ class PushNotificationList(Resource):
                         Notification(
                             customer_id=customer.id,
                             type="push",
-                            text=notification.text,
+                            text=helper.process_text(notification.text, extra_params, notification.is_dynamic),
                             group_id=notification.group_id,
                             is_dynamic=notification.is_dynamic,
                         )
@@ -125,6 +127,7 @@ class PushNotificationList(Resource):
         if not Customer.query.get(notification.customer_id):
             return {"error": "customer_id doesn't exist"}, 422
         notification.type = "push"
+        notification.text = helper.process_text(notification.text, extra_params, notification.is_dynamic)
         db.session.add(notification)
         db.session.commit()
 
