@@ -5,6 +5,7 @@ from notifier.models.device import Device
 from notifier.app import create_app
 from notifier.extensions import db
 from notifier.models.customer import Customer, Group
+from notifier.models.user import User
 
 
 def create_notifier(info):
@@ -19,8 +20,6 @@ def cli():
 @cli.command("init")
 def init():
     """Create a new admin user"""
-    from notifier.extensions import db
-    from notifier.models import User
 
     click.echo("create user")
     user = User(username="admin", email="admin@mail.com", password="admin", active=True)
@@ -31,9 +30,17 @@ def init():
 
 @cli.command("seed")
 def seed():
+    """Drop and seed database"""
+
     click.echo("dropping database..")
     db.drop_all()
     db.create_all()
+
+    click.echo("create user")
+    user = User(username="admin", email="admin@mail.com", password="admin", active=True)
+    db.session.add(user)
+    db.session.commit()
+    click.echo("created user admin")
 
     click.echo("creating groups..")
     for chunk in range(0, 1, 5):
