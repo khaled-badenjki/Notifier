@@ -25,4 +25,6 @@ class Notification(db.Model):
 def after_insert_notification(mapper, connection, target):
     customer = Customer.query.get(target.customer_id)
     if customer and target.type == "sms":
-        notification.get_sms_api.delay(target.id, customer.phone, target.text)
+        notification.get_sms_api.delay(notification_id=target.id,
+                                       phone=customer.phone,
+                                       text=target.text)
