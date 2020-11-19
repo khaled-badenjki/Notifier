@@ -17,6 +17,9 @@ db-migrate:
 db-upgrade:
 	docker-compose exec web notifier db upgrade
 
+db-seed:
+	docker-compose exec web notifier seed
+
 test:
 	docker-compose stop celery # stop celery to avoid conflicts with celery tests
 	docker-compose start rabbitmq redis # ensuring both redis and rabbitmq are started

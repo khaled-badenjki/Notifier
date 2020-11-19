@@ -1,5 +1,5 @@
 from notifier.models import Notification
-from notifier.extensions import ma, db, ma_validate
+from notifier.extensions import ma, db
 
 
 class NotificationSchema(ma.SQLAlchemyAutoSchema):
