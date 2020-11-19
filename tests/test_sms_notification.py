@@ -11,6 +11,7 @@ def test_create_sms_notification(client, db, customer_factory, admin_headers):
     assert rep.status_code == 400
 
     data["text"] = "hello there"
+    data["is_dynamic"] = True
 
     rep = client.post(sms_notifications_url, json=data, headers=admin_headers)
     assert rep.status_code == 422

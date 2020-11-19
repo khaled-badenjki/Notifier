@@ -35,9 +35,9 @@ class PushNotificationResource(Resource):
 
     def get(self, notification_id):
         schema = NotificationSchema(exclude=["type"])
-        notification = Notification.query.filter(Notification.type == "push").get_or_404(
-            notification_id
-        )
+        notification = Notification.query.filter(
+            Notification.type == "push"
+        ).get_or_404(notification_id)
         return {"push notification": schema.dump(notification)}
 
 
