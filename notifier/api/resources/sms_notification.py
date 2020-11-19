@@ -95,11 +95,9 @@ class SmsNotificationList(Resource):
         return paginate(query, schema)
 
     def post(self):
-        # TODO: find out how to remove status field from post request schema docs
         schema = NotificationSchema(
             exclude=[
                 "type",
-                "status",
             ]
         )
         notification = schema.load(request.json)

@@ -9,10 +9,6 @@ class Notification(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(512))
-    status = db.Column(
-        db.Enum("processing", "sent", "failed", name="NotificationStatuses"),
-        default="processing",
-    )
     type = db.Column(db.Enum("sms", "push", name="NotificationTypes"))
     customer_id = db.Column(db.Integer, db.ForeignKey("customer.id"))
     is_dynamic = db.Column(db.Boolean)
@@ -28,5 +24,5 @@ class Notification(db.Model):
 @db_event.listens_for(Notification, "after_insert")
 def after_insert_notification(mapper, connection, target):
     customer = Customer.query.get(target.customer_id)
-    if target.type == "sms":
+    if customer and target.type == "sms":
         notification.get_sms_api.delay(target.id, customer.phone, target.text)

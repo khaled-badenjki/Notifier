@@ -8,15 +8,6 @@ class NotificationSchema(ma.SQLAlchemyAutoSchema):
     text = ma.String(required=True)
     customer_id = ma.Int(required=True)
     is_dynamic = ma.Bool(default=False)
-    status = ma.String(
-        validate=ma_validate.OneOf(
-            [
-                "processing",
-                "sent",
-                "failed",
-            ]
-        )
-    )
 
     class Meta:
         model = Notification
