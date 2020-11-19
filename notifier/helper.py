@@ -1,15 +1,20 @@
 from notifier.models.customer import Customer
+from notifier.translations import translations
 
 
 def process_text(text, extra_params, customer_id, is_dynamic):
-    """Populate provided extra params"""
+    """Translate text based on customer language"""
+    customer = Customer.query.get(customer_id)
+    language = customer.language
+    text = translations[language][text]
+
+    """Populate provided extra params, if dynamic message"""
     if not is_dynamic:
         return text
-
     for extra_param in extra_params:
         text = text.replace(extra_param["key"], extra_param["value"])
 
-    """Populate personalized params"""
+    """Populate personalized params, if dynamic message"""
     customer = Customer.query.get(customer_id)
     customer_params = [
         {
