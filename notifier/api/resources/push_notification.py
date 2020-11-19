@@ -34,7 +34,7 @@ class PushNotificationResource(Resource):
     method_decorators = [jwt_required]
 
     def get(self, notification_id):
-        schema = NotificationSchema(exclude=["type"])
+        schema = NotificationSchema(exclude=["type", "extra_params"])
         notification = Notification.query.filter(
             Notification.type == "push"
         ).get_or_404(notification_id)
@@ -88,6 +88,7 @@ class PushNotificationList(Resource):
         schema = NotificationSchema(
             exclude=[
                 "type",
+                "extra_params",
             ],
             many=True,
         )
