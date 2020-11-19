@@ -113,7 +113,9 @@ class PushNotificationList(Resource):
                         Notification(
                             customer_id=customer.id,
                             type="push",
-                            text=helper.process_text(notification.text, extra_params, notification.is_dynamic),
+                            text=helper.process_text(
+                                notification.text, extra_params, notification.is_dynamic
+                            ),
                             group_id=notification.group_id,
                             is_dynamic=notification.is_dynamic,
                         )
@@ -127,7 +129,9 @@ class PushNotificationList(Resource):
         if not Customer.query.get(notification.customer_id):
             return {"error": "customer_id doesn't exist"}, 422
         notification.type = "push"
-        notification.text = helper.process_text(notification.text, extra_params, notification.is_dynamic)
+        notification.text = helper.process_text(
+            notification.text, extra_params, notification.is_dynamic
+        )
         db.session.add(notification)
         db.session.commit()
 
