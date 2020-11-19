@@ -11,6 +11,7 @@ class Notification(db.Model):
     text = db.Column(db.String(512))
     type = db.Column(db.Enum("sms", "push", name="NotificationTypes"))
     customer_id = db.Column(db.Integer, db.ForeignKey("customer.id"))
+    group_id = db.Column(db.Integer, db.ForeignKey("group.id"))
     is_dynamic = db.Column(db.Boolean)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     updated_at = db.Column(
