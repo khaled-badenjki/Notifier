@@ -22,7 +22,7 @@ Features
 
 * Group notifications for marketing campaigns
 
-* Read to integrate with any SMS or Push notification provider
+* Ready to integrate with any SMS or Push notification provider
 
 
 Technologies Used
@@ -38,7 +38,11 @@ Technologies Used
 
 * Docker & docker-compose for containerization
 
+* Swagger UI for API documentation
+
 * SQLite as a memory database
+
+* Flower for monitoring
 
 * Tox, PyTest and flake8 for linting and testing
 
