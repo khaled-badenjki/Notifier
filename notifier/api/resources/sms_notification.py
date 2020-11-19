@@ -36,7 +36,7 @@ class SmsNotificationResource(Resource):
     method_decorators = [jwt_required]
 
     def get(self, notification_id):
-        schema = NotificationSchema(exclude=["type"])
+        schema = NotificationSchema(exclude=["type", "extra_params"])
         notification = Notification.query.filter(Notification.type == "sms").get_or_404(
             notification_id
         )
@@ -90,6 +90,7 @@ class SmsNotificationList(Resource):
         schema = NotificationSchema(
             exclude=[
                 "type",
+                "extra_params",
             ],
             many=True,
         )

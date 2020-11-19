@@ -10,8 +10,9 @@ def test_create_sms_notification(client, db, customer_factory, admin_headers):
     rep = client.post(sms_notifications_url, json=data, headers=admin_headers)
     assert rep.status_code == 400
 
-    data["text"] = "hello there"
-    data["is_dynamic"] = True
+    data["text"] = "TEST_TEXT"
+    data["is_dynamic"] = False
+    data["extra_params"] = [{}]
 
     rep = client.post(sms_notifications_url, json=data, headers=admin_headers)
     assert rep.status_code == 422
@@ -28,7 +29,7 @@ def test_create_sms_notification(client, db, customer_factory, admin_headers):
     notification = db.session.query(Notification).filter_by(id=data["notification"]["id"]).first()
 
     assert notification.customer_id == 1
-    assert notification.text == "hello there"
+    assert notification.text == "TEST_TEXT"
 
 
 def test_get_all_sms_notification(client, db, sms_notification_factory, admin_headers):
