@@ -83,7 +83,7 @@ class PushNotificationList(Resource):
                   notification: NotificationSchema
     """
 
-    method_decorators = [jwt_required]
+    # method_decorators = [jwt_required]
 
     def get(self):
         schema = NotificationSchema(
@@ -104,6 +104,7 @@ class PushNotificationList(Resource):
         )
         notification = schema.load(request.json)
         extra_params = request.json["extra_params"]
+
         if notification.group_id:
             group = Group.query.get_or_404(notification.group_id)
             customers = group.group_customers
@@ -114,7 +115,10 @@ class PushNotificationList(Resource):
                             customer_id=customer.id,
                             type="push",
                             text=helper.process_text(
-                                notification.text, extra_params, notification.is_dynamic
+                                text=notification.text,
+                                extra_params=extra_params,
+                                customer_id=customer.id,
+                                is_dynamic=notification.is_dynamic,
                             ),
                             group_id=notification.group_id,
                             is_dynamic=notification.is_dynamic,
@@ -126,11 +130,16 @@ class PushNotificationList(Resource):
             return {
                 "msg": "push group notifications added to queue",
             }, 201
+
         if not Customer.query.get(notification.customer_id):
             return {"error": "customer_id doesn't exist"}, 422
+
         notification.type = "push"
         notification.text = helper.process_text(
-            notification.text, extra_params, notification.is_dynamic
+            text=notification.text,
+            extra_params=extra_params,
+            customer_id=notification.customer_id,
+            is_dynamic=notification.is_dynamic,
         )
         db.session.add(notification)
         db.session.commit()
