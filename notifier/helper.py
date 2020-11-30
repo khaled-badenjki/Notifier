@@ -6,7 +6,8 @@ def process_text(text, extra_params, customer_id, is_dynamic):
     """Translate text based on customer language"""
     customer = Customer.query.get(customer_id)
     language = customer.language
-    text = translations[language][text]
+    if text in translations[language]:
+        text = translations[language][text]
 
     """Populate provided extra params, if dynamic message"""
     if not is_dynamic:
