@@ -83,7 +83,7 @@ class PushNotificationList(Resource):
                   notification: NotificationSchema
     """
 
-    # method_decorators = [jwt_required]
+    method_decorators = [jwt_required]
 
     def get(self):
         schema = NotificationSchema(
